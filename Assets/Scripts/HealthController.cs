@@ -20,15 +20,15 @@ public class HealthController : MonoBehaviour
 
     private void ReduceLife()
     {
+        bool lifeReduced = false;
         int count = 0;
         for(int i = 0; i < life.Count; i++)
         {
-            if(!life[i].lifeUsed)
+            if(!life[i].lifeUsed && !lifeReduced)
             {
                 life[i].lifeUsed = true;
-                Color color = life[i].heart.material.color;
-                color.a = 0;
-                life[i].heart.material.color = color;
+                life[i].heart.gameObject.SetActive(false);
+                lifeReduced = true;
                 break;
             }
         }

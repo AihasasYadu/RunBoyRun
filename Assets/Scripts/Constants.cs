@@ -2,7 +2,9 @@
 {
     Platform,
     Coins,
-    Obstacles
+    JumpObstacles,
+    SlideObstacles,
+    Last
 }
 
 public enum Lanes

@@ -10,6 +10,7 @@ public class PlatformManager : MonoSingletonGeneric<PlatformManager>
 
     private void Start()
     {
+        EventsManager.ResetGame += DestroyGameObject;
         currObjectType = PoolObjects.Platform;
         platformQ = new Queue<GameObject>();
         InitialPlatforms();
@@ -17,8 +18,7 @@ public class PlatformManager : MonoSingletonGeneric<PlatformManager>
 
     private void InitialPlatforms()
     {
-        platformQ.Enqueue(PoolingController.Instance.SpawnFromPool(currObjectType, nextSpawnPoint));
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             AddToPlatformQueue();
         }
@@ -30,6 +30,18 @@ public class PlatformManager : MonoSingletonGeneric<PlatformManager>
         {
             nextSpawnPoint = item.GetComponent<PlatformController>().GetNextSpawnPoint;
         }
-        platformQ.Enqueue(PoolingController.Instance.SpawnFromPool(currObjectType, nextSpawnPoint));
+        GameObject temp = PoolingController.Instance.SpawnFromPool(currObjectType, nextSpawnPoint);
+        temp.GetComponent<PlatformController>().AddItemsOnPlatform();
+        platformQ.Enqueue(temp);
+    }
+
+    private void DestroyGameObject()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        EventsManager.ResetGame -= DestroyGameObject;
     }
 }

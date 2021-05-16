@@ -15,9 +15,15 @@ public class PoolingController : MonoSingletonGeneric<PoolingController>
     [SerializeField] private List<Pool> poolList;
     private Dictionary<PoolObjects, List<GameObject>> poolDict;
 
+    protected override void Awake()
+    {
+        base.Awake();
+        InstantiatePool();
+    }
+
     private void Start()
     {
-        InstantiatePool();
+        EventsManager.ResetGame += DestroyGameObject;
     }
 
     private void InstantiatePool()
@@ -60,5 +66,15 @@ public class PoolingController : MonoSingletonGeneric<PoolingController>
         objToSpawn.transform.rotation = spawnTarget.rotation;
 
         return objToSpawn;
+    }
+
+    private void DestroyGameObject()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        EventsManager.ResetGame -= DestroyGameObject;
     }
 }
